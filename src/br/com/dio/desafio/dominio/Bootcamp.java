@@ -1,70 +1,43 @@
 package br.com.dio.desafio.dominio;
 
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Bootcamp {
     private String nome;
     private String descricao;
-    private final LocalDate dataInicial = LocalDate.now();
-    private final LocalDate dataFinal = dataInicial.plusDays(45);
-    private Set<Dev> devsInscritos = new HashSet<>();
-    private Set<Conteudo> conteudos = new LinkedHashSet<>();
+    private final List<Conteudo> conteudos = new ArrayList<>();
+    private final List<Dev> devsInscritos = new ArrayList<>();
 
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
+    public List<Conteudo> getConteudos() { return conteudos; }
+    public List<Dev> getDevsInscritos() { return devsInscritos; }
 
-    public String getNome() {
-        return nome;
-    }
+    public void exibirConteudos() {
+        System.out.println("📚 Conteúdos do Bootcamp (" + conteudos.size() + "):");
+        if (conteudos.isEmpty()) {
+            System.out.println("   Nenhum conteúdo disponível.");
+        } else {
+            int index = 1;
+            for (Conteudo conteudo : conteudos) {
+                System.out.printf("   %d. %s%n", index++, conteudo.getTitulo());
+                System.out.printf("      📝 %s%n", conteudo.getDescricao());
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public LocalDate getDataInicial() {
-        return dataInicial;
-    }
-
-    public LocalDate getDataFinal() {
-        return dataFinal;
-    }
-
-    public Set<Dev> getDevsInscritos() {
-        return devsInscritos;
-    }
-
-    public void setDevsInscritos(Set<Dev> devsInscritos) {
-        this.devsInscritos = devsInscritos;
-    }
-
-    public Set<Conteudo> getConteudos() {
-        return conteudos;
-    }
-
-    public void setConteudos(Set<Conteudo> conteudos) {
-        this.conteudos = conteudos;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Bootcamp bootcamp = (Bootcamp) o;
-        return Objects.equals(nome, bootcamp.nome) && Objects.equals(descricao, bootcamp.descricao) && Objects.equals(dataInicial, bootcamp.dataInicial) && Objects.equals(dataFinal, bootcamp.dataFinal) && Objects.equals(devsInscritos, bootcamp.devsInscritos) && Objects.equals(conteudos, bootcamp.conteudos);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(nome, descricao, dataInicial, dataFinal, devsInscritos, conteudos);
+                if (conteudo instanceof Curso) {
+                    Curso curso = (Curso) conteudo;
+                    System.out.printf("      ⏱️ Carga Horária: %d horas%n", curso.getCargaHoraria());
+                } else if (conteudo instanceof Mentoria) {
+                    Mentoria mentoria = (Mentoria) conteudo;
+                    System.out.printf("      📅 Data: %s%n",
+                            mentoria.getData().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+                }
+                System.out.println();
+            }
+        }
+        System.out.println();
     }
 }
